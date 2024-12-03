@@ -1,0 +1,29 @@
+.bar {
+  padding: 12px;
+  padding-left: 40px;
+  outline: transparent;
+  border-radius: 12px;
+  border: none;
+}
+
+.btn {
+  outline: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 12px;
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.error {
+  color: red;
+}
