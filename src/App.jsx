@@ -11,24 +11,25 @@ import ImageGallery from "./components/ImageGallery/ImageGallery";
 
 function App() {
   const [images, setImages] = useState([]);
-  const [isLoading, setIsLoadings] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const search = async (query) => {
     try {
-      setIsLoadings(true);
+      setIsLoading(true);
       const res = await searchImage(query);
       setImages(res);
     } catch {
       toast.error("Coud not connect to API");
     } finally {
       // remove loader
-      setIsLoadings(false);
+      setIsLoading(false);
     }
   };
   return (
     <>
       <Toaster position="top-right" />
       <Header search={search} />
-      <ImageGallery images={images} />
+      {images.length > 0 ? <ImageGallery images={images} /> : <p>Not found</p>}
       {isLoading && <Loader />}
     </>
   );
