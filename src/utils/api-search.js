@@ -1,10 +1,12 @@
 import api from "./api";
 
-export async function searchImage(params) {
+export async function searchImage(query, page) {
   const url = "/search/photos";
-  return await api.get(url, {
+  const { data } = await api.get(url, {
     params: {
-      params,
+      query,
+      page,
     },
   });
+  return data;
 }

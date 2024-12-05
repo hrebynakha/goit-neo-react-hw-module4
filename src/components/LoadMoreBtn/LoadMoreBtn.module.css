@@ -1,0 +1,14 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: transparent;
+  padding: 20px;
+  border-radius: 12px;
+  border: none;
+  color: white;
+  background-color: blueviolet;
+  width: 256px;
+  margin: 0 auto;
+  margin-top: 20px;
+}

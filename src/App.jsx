@@ -1,36 +1,68 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 import { searchImage } from "./utils/api-search";
 
 import Header from "./components/Header/Header";
+import Container from "./components/Container/Container";
 import Loader from "./components/Loader/Loader";
-
-import "./App.css";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
+import "./App.css";
 
 function App() {
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const search = async (query) => {
-    try {
-      setIsLoading(true);
-      const res = await searchImage(query);
-      setImages(res);
-    } catch {
-      toast.error("Coud not connect to API");
-    } finally {
-      // remove loader
-      setIsLoading(false);
-    }
+    setIsLoading(true);
+    setIsError(false);
+    setQuery(query);
+    setPage(1);
+    setImages([]);
+    setTotalResults(0);
   };
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        setIsError(false);
+        setIsLoading(true);
+        const res = await searchImage(query, page);
+        setImages((prevImages) => [...prevImages, ...res.results]);
+        setTotalResults(res.total);
+      } catch {
+        toast.error("Coud not connect to API");
+        setQuery("");
+        setIsError(true);
+      } finally {
+        // remove loader
+        setIsLoading(false);
+      }
+    };
+    if (query) fetchImages();
+  }, [query, page]);
   return (
     <>
-      <Toaster position="top-right" />
-      <Header search={search} />
-      {images.length > 0 ? <ImageGallery images={images} /> : <p>Not found</p>}
       {isLoading && <Loader />}
+      <Toaster position="top-right" />
+
+      <Header search={search} />
+      <Container>
+        {images.length > 0 ? (
+          <ImageGallery images={images} />
+        ) : (
+          !isLoading && query && <ErrorMessage msg="Not found any images" />
+        )}
+        {isError && <ErrorMessage />}
+        {images.length < totalResults && (
+          <LoadMoreBtn onClick={() => setPage(page + 1)} />
+        )}
+      </Container>
     </>
   );
 }
