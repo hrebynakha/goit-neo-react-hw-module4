@@ -11,4 +11,5 @@
   -webkit-box-shadow: -13px 14px 94px -52px rgba(22, 247, 97, 1);
   -moz-box-shadow: -13px 14px 94px -52px rgba(22, 247, 97, 1);
   box-shadow: -13px 14px 94px -52px rgba(22, 247, 97, 1);
+  border-bottom: 1px solid rebeccapurple;
 }

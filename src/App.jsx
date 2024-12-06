@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-
 import { searchImage } from "./utils/api-search";
 
 import Header from "./components/Header/Header";
@@ -9,11 +8,11 @@ import Loader from "./components/Loader/Loader";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
+import ImageModal from "./components/ImageModal/ImageModal";
+
 import "./App.css";
-import { ImageModal } from "./components/ImageModal/ImageModal";
 
 function App() {
-  const imageRef = useRef();
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
@@ -21,14 +20,18 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState(false);
 
   const search = async (query) => {
     setIsLoading(true);
     setIsError(false);
-    setQuery(query);
+    if (page === 1) {
+      setIsLoading(false);
+    }
     setPage(1);
     setImages([]);
     setTotalResults(0);
+    setQuery(query);
   };
 
   useEffect(() => {
@@ -38,10 +41,10 @@ function App() {
         setIsLoading(true);
         const res = await searchImage(query, page);
         setImages((prevImages) => [...prevImages, ...res.results]);
-        setTotalResults(res.total);
+        if (page === 1) setTotalResults(res.total);
       } catch {
         toast.error("Coud not connect to API");
-        setQuery("");
+
         setIsError(true);
       } finally {
         // remove loader
@@ -51,21 +54,13 @@ function App() {
     if (query) fetchImages();
   }, [query, page]);
 
-  function openModal() {
+  const openModal = (currnetImage) => {
     setModalIsOpen(true);
-  }
-
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = "#f00";
-    console.log("Insert target image");
-  }
-
-  function closeModal() {
+    setCurrentImage(images[currnetImage]);
+  };
+  const closeModal = () => {
     setModalIsOpen(false);
-  }
-
-  useEffect(() => imageRef.current.focus(), []);
+  };
 
   return (
     <>
@@ -76,16 +71,19 @@ function App() {
         {images.length > 0 ? (
           <ImageGallery images={images} openModal={openModal} />
         ) : (
-          !isLoading && query && <ErrorMessage msg="Not found any images" />
+          !isLoading &&
+          query &&
+          !isError && <ErrorMessage msg="Not found any images" />
         )}
         {isError && <ErrorMessage />}
         {images.length < totalResults && (
           <LoadMoreBtn onClick={() => setPage(page + 1)} />
         )}
+
         <ImageModal
           modalIsOpen={modalIsOpen}
-          afterOpenModal={afterOpenModal}
           closeModal={closeModal}
+          img={currentImage}
         />
       </Container>
     </>

@@ -1,6 +1,9 @@
 import { ErrorMessage, Formik, Form, Field } from "formik";
-import css from "./SearchBar.module.css";
 import * as Yup from "yup";
+import { AiOutlineSearch } from "react-icons/ai";
+
+import css from "./SearchBar.module.css";
+import { IconContext } from "react-icons";
 
 const SearchBar = ({ onSubmit }) => {
   const searchForm = {
@@ -8,7 +11,7 @@ const SearchBar = ({ onSubmit }) => {
       query: "",
     },
     schema: Yup.object({
-      query: Yup.string().min(1, "too short").required("Required"),
+      query: Yup.string().required("This field is required"),
     }),
     submit: (values) => {
       onSubmit(values.query);
@@ -35,7 +38,9 @@ const SearchBar = ({ onSubmit }) => {
           {(msg) => <div className={css.error}>{msg}</div>}
         </ErrorMessage>
         <button className={css.btn} type="submit" onSubmit={onSubmit}>
-          Search
+          <IconContext.Provider value={{ color: "#08090a", size: "25px" }}>
+            <AiOutlineSearch />
+          </IconContext.Provider>
         </button>
       </Form>
     </Formik>

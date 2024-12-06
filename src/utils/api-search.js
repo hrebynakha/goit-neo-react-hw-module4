@@ -6,8 +6,8 @@ export async function searchImage(query, page) {
     params: {
       query,
       page,
+      per_page: 12,
     },
   });
-  console.log(data);
   return data;
 }

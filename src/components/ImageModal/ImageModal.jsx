@@ -1,5 +1,7 @@
 import Modal from "react-modal";
 
+import css from "./ImageModal.module.css";
+
 const customStyles = {
   content: {
     position: "absolute",
@@ -18,28 +20,23 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-export const ImageModal = ({
-  modalIsOpen,
-  afterOpenModal,
-  closeModal,
-  img,
-  subtitle,
-}) => {
+const ImageModal = ({ modalIsOpen, closeModal, img = null }) => {
   return (
     <Modal
       isOpen={modalIsOpen}
-      onAfterOpen={afterOpenModal}
       onRequestClose={closeModal}
       style={customStyles}
-      contentLabel="Example Modal"
+      contentLabel="Image modal"
     >
-      <button onClick={closeModal}>close</button>
-      <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2>
-      {/* <img
-        src="https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODM1MDh8MHwxfHNlYXJjaHwxfHxvZmZpY2V8ZW58MHx8fHwxNzMzNDMwNjEyfDA&ixlib=rb-4.0.3&q=80&w=1080"
-        alt="Sla"
-      /> */}
-      {/* <img src={img.urls.regular} alt={img.alt_description} /> */}
+      {img && (
+        <img
+          className={css.img}
+          src={img.urls.regular}
+          alt={img.alt_description}
+        />
+      )}
     </Modal>
   );
 };
+
+export default ImageModal;
