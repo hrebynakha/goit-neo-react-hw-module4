@@ -1,7 +1,8 @@
+import css from "./ImageCard.module.css";
 const ImageCard = ({ src, alt }) => {
   return (
     <div>
-      <img src={src} alt={alt} width="362" />
+      <img className={css.card} src={src} alt={alt} />
     </div>
   );
 };

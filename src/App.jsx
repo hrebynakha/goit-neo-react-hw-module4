@@ -10,14 +10,17 @@ import ImageGallery from "./components/ImageGallery/ImageGallery";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import "./App.css";
+import { ImageModal } from "./components/ImageModal/ImageModal";
 
 function App() {
+  const imageRef = useRef();
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const search = async (query) => {
     setIsLoading(true);
@@ -27,6 +30,7 @@ function App() {
     setImages([]);
     setTotalResults(0);
   };
+
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -46,15 +50,31 @@ function App() {
     };
     if (query) fetchImages();
   }, [query, page]);
+
+  function openModal() {
+    setModalIsOpen(true);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = "#f00";
+    console.log("Insert target image");
+  }
+
+  function closeModal() {
+    setModalIsOpen(false);
+  }
+
+  useEffect(() => imageRef.current.focus(), []);
+
   return (
     <>
       {isLoading && <Loader />}
       <Toaster position="top-right" />
-
       <Header search={search} />
       <Container>
         {images.length > 0 ? (
-          <ImageGallery images={images} />
+          <ImageGallery images={images} openModal={openModal} />
         ) : (
           !isLoading && query && <ErrorMessage msg="Not found any images" />
         )}
@@ -62,6 +82,11 @@ function App() {
         {images.length < totalResults && (
           <LoadMoreBtn onClick={() => setPage(page + 1)} />
         )}
+        <ImageModal
+          modalIsOpen={modalIsOpen}
+          afterOpenModal={afterOpenModal}
+          closeModal={closeModal}
+        />
       </Container>
     </>
   );

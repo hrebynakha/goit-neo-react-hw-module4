@@ -8,5 +8,6 @@ export async function searchImage(query, page) {
       page,
     },
   });
+  console.log(data);
   return data;
 }

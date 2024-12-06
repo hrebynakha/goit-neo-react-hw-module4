@@ -1,8 +1,7 @@
 .container {
   max-width: 375px;
   margin: 0 auto;
-  padding: 0 16px;
-  margin-top: 56px;
+  padding: 60px 16px;
   /* outline: 2px solid red;
   outline-offset: -2px; */
 }
@@ -16,6 +15,6 @@
 @media only screen and (min-width: 1158px) {
   .container {
     max-width: 1158px;
-    padding: 0 20px;
+    padding: 60px 20px;
   }
 }

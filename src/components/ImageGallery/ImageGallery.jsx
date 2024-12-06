@@ -1,8 +1,8 @@
 import ImageCard from "../ImageCard/ImageCard";
 import css from "./ImageGallery.module.css";
-const ImageGallery = ({ images }) => {
+const ImageGallery = ({ images, openModal }) => {
   return (
-    <ul className={css.gallery}>
+    <ul className={css.gallery} onClick={openModal}>
       {images.map((img) => {
         return (
           <li key={img.id}>
