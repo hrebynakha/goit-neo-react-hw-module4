@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { searchImage } from "./utils/api-search";
 
@@ -11,9 +11,10 @@ import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import ImageModal from "./components/ImageModal/ImageModal";
 
 import "./App.css";
+import ToTopBtn from "./components/ToTopBtn/ToTopBtn";
 
 function App() {
-  const [query, setQuery] = useState({ value: "" });
+  const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [images, setImages] = useState([]);
@@ -21,14 +22,22 @@ function App() {
   const [isError, setIsError] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(false);
+  const infoImg = useRef();
 
-  const search = async (query) => {
-    setIsLoading(true);
+  const search = async (userQuery) => {
+    if (userQuery.trim() == "") {
+      toast.error("You cannot search empty string!");
+      return;
+    }
+    if (userQuery === query) {
+      toast.success("You alredy search this!");
+      return;
+    }
     setIsError(false);
     setPage(1);
     setImages([]);
     setTotalResults(0);
-    setQuery({ value: query });
+    setQuery(userQuery);
   };
 
   useEffect(() => {
@@ -36,7 +45,7 @@ function App() {
       try {
         setIsError(false);
         setIsLoading(true);
-        const res = await searchImage(query.value, page);
+        const res = await searchImage(query, page);
         setImages((prevImages) => [...prevImages, ...res.results]);
         if (page === 1) setTotalResults(res.total);
       } catch {
@@ -47,12 +56,15 @@ function App() {
         setIsLoading(false);
       }
     };
-    if (query.value) fetchImages();
+    if (query) fetchImages();
   }, [query, page]);
 
   const openModal = (currnetImage) => {
     setModalIsOpen(true);
     setCurrentImage(images[currnetImage]);
+  };
+  const afterOpenModal = () => {
+    infoImg.current.style.opacity = 1;
   };
   const closeModal = () => {
     setModalIsOpen(false);
@@ -68,7 +80,7 @@ function App() {
           <ImageGallery images={images} openModal={openModal} />
         ) : (
           !isLoading &&
-          query.value &&
+          query &&
           !isError && <ErrorMessage msg="Not found any images" />
         )}
         {isError && <ErrorMessage />}
@@ -79,8 +91,11 @@ function App() {
         <ImageModal
           modalIsOpen={modalIsOpen}
           closeModal={closeModal}
+          afterOpenModal={afterOpenModal}
+          infoImg={infoImg}
           img={currentImage}
         />
+        <ToTopBtn />
       </Container>
     </>
   );
