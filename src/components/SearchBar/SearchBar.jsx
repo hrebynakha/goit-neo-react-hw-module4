@@ -1,9 +1,8 @@
+import { IconContext } from "react-icons";
+import { AiOutlineSearch } from "react-icons/ai";
 import { ErrorMessage, Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { AiOutlineSearch } from "react-icons/ai";
-
 import css from "./SearchBar.module.css";
-import { IconContext } from "react-icons";
 
 const SearchBar = ({ onSubmit }) => {
   const searchForm = {

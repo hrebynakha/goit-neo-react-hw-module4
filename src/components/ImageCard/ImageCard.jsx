@@ -1,4 +1,5 @@
 import css from "./ImageCard.module.css";
+
 const ImageCard = ({ src, alt, onClick }) => {
   return (
     <div>

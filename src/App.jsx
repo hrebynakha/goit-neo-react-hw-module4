@@ -9,9 +9,9 @@ import ImageGallery from "./components/ImageGallery/ImageGallery";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import ImageModal from "./components/ImageModal/ImageModal";
+import ToTopBtn from "./components/ToTopBtn/ToTopBtn";
 
 import "./App.css";
-import ToTopBtn from "./components/ToTopBtn/ToTopBtn";
 
 function App() {
   const [query, setQuery] = useState("");

@@ -1,7 +1,6 @@
 import Modal from "react-modal";
-import StatisticItem from "../StatisticItem/StatisticItem";
 import { AiFillHeart } from "react-icons/ai";
-
+import StatisticItem from "../StatisticItem/StatisticItem";
 import css from "./ImageModal.module.css";
 
 const customStyles = {
