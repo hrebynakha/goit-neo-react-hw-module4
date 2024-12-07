@@ -13,7 +13,7 @@ import ImageModal from "./components/ImageModal/ImageModal";
 import "./App.css";
 
 function App() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState({ value: "" });
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [images, setImages] = useState([]);
@@ -25,13 +25,10 @@ function App() {
   const search = async (query) => {
     setIsLoading(true);
     setIsError(false);
-    if (page === 1) {
-      setIsLoading(false);
-    }
     setPage(1);
     setImages([]);
     setTotalResults(0);
-    setQuery(query);
+    setQuery({ value: query });
   };
 
   useEffect(() => {
@@ -39,19 +36,18 @@ function App() {
       try {
         setIsError(false);
         setIsLoading(true);
-        const res = await searchImage(query, page);
+        const res = await searchImage(query.value, page);
         setImages((prevImages) => [...prevImages, ...res.results]);
         if (page === 1) setTotalResults(res.total);
       } catch {
         toast.error("Coud not connect to API");
-
         setIsError(true);
       } finally {
         // remove loader
         setIsLoading(false);
       }
     };
-    if (query) fetchImages();
+    if (query.value) fetchImages();
   }, [query, page]);
 
   const openModal = (currnetImage) => {
@@ -72,7 +68,7 @@ function App() {
           <ImageGallery images={images} openModal={openModal} />
         ) : (
           !isLoading &&
-          query &&
+          query.value &&
           !isError && <ErrorMessage msg="Not found any images" />
         )}
         {isError && <ErrorMessage />}
